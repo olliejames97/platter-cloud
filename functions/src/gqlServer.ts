@@ -5,6 +5,7 @@ import schema from "./schema";
 import resolvers from "./resolvers";
 import { User } from "./generated/graphql";
 import { getUserWithToken } from "./users/helpers";
+import { initFirebaseAdmin } from "./auth";
 
 interface Context {
   user: User | null;
@@ -13,6 +14,7 @@ interface Context {
 
 const gqlServer = () => {
   const app = express();
+  initFirebaseAdmin();
 
   const apolloServer = new ApolloServer({
     typeDefs: schema,

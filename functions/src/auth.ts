@@ -1,7 +1,19 @@
 // firebase-auth abstraction layer - all interaction with firebase-auth should be done in here
+import * as admin from "firebase-admin";
+import { serviceAccountKeys } from "./config";
 
-// complete this
-const getUserIdFirebase = async (token: string) => Promise.resolve(null);
+export const initFirebaseAdmin = () => {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccountKeys),
+  });
+};
 
-// this should be in DB layer
-const getUserFirebase = () => null;
+export const getUserIdFirebase = async (
+  token: string
+): Promise<string | null> => {
+  const decodedToken = await admin
+    .auth()
+    .verifyIdToken(token)
+    .catch(() => null);
+  return decodedToken?.uid ?? null;
+};

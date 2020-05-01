@@ -1,7 +1,7 @@
 {
   "projects": {
     "default": "platter-app",
-    "prod": "platter-app",
+    "prod": "platter-app-8a7ce",
     "dev": "platter-app-dev"
   }
 }

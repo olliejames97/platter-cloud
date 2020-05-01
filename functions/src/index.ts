@@ -1,13 +1,30 @@
 import * as functions from "firebase-functions";
 import gqlServer from "./gqlServer";
+import { isProd } from "./config";
+import { request } from "express";
 
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
 
 const server = gqlServer();
 
-export const helloWorld = functions.https.onRequest((request, response) => {
-  response.send("Hello from Firebase!");
+export const status = functions.https.onRequest((request, response) => {
+  console.log(process.env.GCLOUD_PROJECT);
+  response.send(
+    "Project: " +
+      process.env.GCLOUD_PROJECT +
+      "<br/>" +
+      "Environment is production: " +
+      isProd
+  );
+});
+
+export const signUp = functions.https.onRequest((request, response) => {
+  response.send(require("./users/access.html"));
+});
+
+export const createPlatterUser = functions.auth.user().onCreate((user) => {
+  console.log("A new user has been created");
 });
 
 export const api = functions.https.onRequest(server);
