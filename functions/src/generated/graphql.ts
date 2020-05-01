@@ -3,8 +3,11 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from "graphql";
-
 export type Maybe<T> = T | null;
+export type RequireFields<T, K extends keyof T> = {
+  [X in Exclude<keyof T, K>]?: T[X];
+} &
+  { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -27,6 +30,16 @@ export type Query = {
   __typename?: "Query";
   hello?: Maybe<Scalars["String"]>;
   me?: Maybe<User>;
+};
+
+export type Mutation = {
+  __typename?: "Mutation";
+  signUp?: Maybe<User>;
+};
+
+export type MutationSignUpArgs = {
+  username: Scalars["String"];
+  password: Scalars["String"];
 };
 
 export enum CacheControlScope {
@@ -146,6 +159,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   User: ResolverTypeWrapper<User>;
   Query: ResolverTypeWrapper<{}>;
+  Mutation: ResolverTypeWrapper<{}>;
   CacheControlScope: CacheControlScope;
   Upload: ResolverTypeWrapper<Scalars["Upload"]>;
 };
@@ -156,6 +170,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars["Boolean"];
   User: User;
   Query: {};
+  Mutation: {};
   CacheControlScope: CacheControlScope;
   Upload: Scalars["Upload"];
 };
@@ -178,6 +193,18 @@ export type QueryResolvers<
   me?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 };
 
+export type MutationResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
+> = {
+  signUp?: Resolver<
+    Maybe<ResolversTypes["User"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationSignUpArgs, "username" | "password">
+  >;
+};
+
 export interface UploadScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["Upload"], any> {
   name: "Upload";
@@ -186,6 +213,7 @@ export interface UploadScalarConfig
 export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Upload?: GraphQLScalarType;
 };
 

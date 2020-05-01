@@ -7,12 +7,14 @@ import { User } from "./generated/graphql";
 import { getUserWithToken } from "./users/helpers";
 import { initFirebaseAdmin } from "./auth";
 
-interface Context {
+export interface Context {
   user: User | null;
   userToken: string;
 }
 
 const gqlServer = () => {
+  console.log("API Starting.");
+  console.log("resolvers: ", JSON.stringify(resolvers, null, 2));
   const app = express();
   initFirebaseAdmin();
 

@@ -11,6 +11,11 @@ const schema = gql`
     hello: String
     me: User
   }
+
+  type Mutation {
+    # Sign up handles firebase
+    signUp(username: String!, password: String!): User
+  }
 `;
 
 export default schema;
