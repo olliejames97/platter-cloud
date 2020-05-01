@@ -1,0 +1,9 @@
+overwrite: true
+schema: "schema.json"
+documents: null
+generates:
+  src/generated/graphql.ts:
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+      - "typescript-document-nodes"

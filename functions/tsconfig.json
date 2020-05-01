@@ -7,8 +7,10 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "lib": ["esnext.asynciterable"]
   },
+  "exclude": ["node_modules", "src/generated"],
   "compileOnSave": true,
   "include": ["src"]
 }
