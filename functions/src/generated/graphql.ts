@@ -21,9 +21,15 @@ export type Scalars = {
 
 export type User = {
   __typename?: "User";
-  _id: Scalars["String"];
+  id: Scalars["String"];
   hasFullAccount: Scalars["Boolean"];
   username?: Maybe<Scalars["String"]>;
+};
+
+export type FirebaseUser = {
+  __typename?: "FirebaseUser";
+  id: Scalars["String"];
+  email?: Maybe<Scalars["String"]>;
 };
 
 export type Query = {
@@ -34,11 +40,11 @@ export type Query = {
 
 export type Mutation = {
   __typename?: "Mutation";
-  signUp?: Maybe<User>;
+  signUp?: Maybe<FirebaseUser>;
 };
 
 export type MutationSignUpArgs = {
-  username: Scalars["String"];
+  email: Scalars["String"];
   password: Scalars["String"];
 };
 
@@ -158,6 +164,7 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars["String"]>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   User: ResolverTypeWrapper<User>;
+  FirebaseUser: ResolverTypeWrapper<FirebaseUser>;
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
   CacheControlScope: CacheControlScope;
@@ -169,6 +176,7 @@ export type ResolversParentTypes = {
   String: Scalars["String"];
   Boolean: Scalars["Boolean"];
   User: User;
+  FirebaseUser: FirebaseUser;
   Query: {};
   Mutation: {};
   CacheControlScope: CacheControlScope;
@@ -179,9 +187,18 @@ export type UserResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
 > = {
-  _id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   hasFullAccount?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+};
+
+export type FirebaseUserResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["FirebaseUser"] = ResolversParentTypes["FirebaseUser"]
+> = {
+  id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 };
 
@@ -198,10 +215,10 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
 > = {
   signUp?: Resolver<
-    Maybe<ResolversTypes["User"]>,
+    Maybe<ResolversTypes["FirebaseUser"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationSignUpArgs, "username" | "password">
+    RequireFields<MutationSignUpArgs, "email" | "password">
   >;
 };
 
@@ -212,6 +229,7 @@ export interface UploadScalarConfig
 
 export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
+  FirebaseUser?: FirebaseUserResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Upload?: GraphQLScalarType;

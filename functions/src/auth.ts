@@ -3,6 +3,7 @@ import * as admin from "firebase-admin";
 import { serviceAccountKeys } from "./config";
 
 export const initFirebaseAdmin = () => {
+  console.log("initialising firebase admin");
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccountKeys),
   });

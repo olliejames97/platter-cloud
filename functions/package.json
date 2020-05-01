@@ -5,12 +5,12 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "dev": "firebase emulators:start",
+    "dev": "npm run build && firebase emulators:start",
     "deploy": "firebase deploy --only functions",
     "deploy-dev": "firebase use dev && firebase deploy",
     "deploy-prod": "firebase use prod && firebase deploy",
     "logs": "firebase functions:log",
-    "fetch-schema": "apollo-codegen introspect-schema https://us-central1-platter-app-dev.cloudfunctions.net/api --output schema.json",
+    "fetch-schema": "apollo-codegen introspect-schema http://localhost:5001/platter-app-dev/us-central1/api --output schema.json",
     "generate-types": "graphql-codegen --config codegen.yml"
   },
   "engines": {

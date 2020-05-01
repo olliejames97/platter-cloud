@@ -9,12 +9,11 @@ import { initFirebaseAdmin } from "./auth";
 
 export interface Context {
   user: User | null;
-  userToken: string;
+  userToken: string | null;
 }
 
 const gqlServer = () => {
   console.log("API Starting.");
-  console.log("resolvers: ", JSON.stringify(resolvers, null, 2));
   const app = express();
   initFirebaseAdmin();
 
@@ -26,7 +25,8 @@ const gqlServer = () => {
     context: async ({ req }) => {
       const token = req.headers.authorization ?? null;
       if (!token) {
-        return null;
+        const ctx: Context = { userToken: null, user: null };
+        return ctx;
       }
       const restOfUser = await getUserWithToken(token);
       // add the user to the context

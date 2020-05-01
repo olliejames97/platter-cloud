@@ -8,8 +8,6 @@ import { isProd } from "./config";
 const server = gqlServer();
 
 export const status = functions.https.onRequest((request, response) => {
-  console.log(process.env.GCLOUD_PROJECT);
-
   response.send(
     "Project: " +
       process.env.GCLOUD_PROJECT +
@@ -17,11 +15,6 @@ export const status = functions.https.onRequest((request, response) => {
       "Environment is production: " +
       isProd
   );
-});
-
-export const signUp = functions.https.onRequest((request, response) => {
-  response.sendFile("./users/access.html");
-  //  response.send(require("./users/access.html"));
 });
 
 export const createPlatterUser = functions.auth.user().onCreate((user) => {
