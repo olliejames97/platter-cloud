@@ -3,8 +3,13 @@ import { gql } from "apollo-server-express";
 const schema = gql`
   type User {
     id: String!
-    hasFullAccount: Boolean!
     username: String
+    hasFullAccount: Boolean!
+  }
+
+  input UpdateUser {
+    username: String
+    description: String
   }
 
   type FirebaseUser {
@@ -17,9 +22,15 @@ const schema = gql`
     me: User
   }
 
+  type Token {
+    token: String
+  }
+
   type Mutation {
     # Sign up handles firebase
     signUp(email: String!, password: String!): FirebaseUser
+    signIn(email: String!, password: String!): FirebaseUser
+    updateUser(id: String!, data: UpdateUser): Token
   }
 `;
 

@@ -22,6 +22,7 @@ export const userResolvers: Resolvers<Context> = {
           throw new ApolloError(e);
         });
 
+      // After this onFirebaseSignup should trigger
       return {
         id: user.uid,
         email: user.email,

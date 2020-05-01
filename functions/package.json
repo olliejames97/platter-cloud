@@ -5,7 +5,7 @@
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "dev": "npm run build && firebase emulators:start",
+    "dev": "firebase use dev && npm run build && firebase emulators:start",
     "deploy": "firebase deploy --only functions",
     "deploy-dev": "firebase use dev && firebase deploy",
     "deploy-prod": "firebase use prod && firebase deploy",

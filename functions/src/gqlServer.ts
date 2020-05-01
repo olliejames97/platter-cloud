@@ -14,8 +14,8 @@ export interface Context {
 
 const gqlServer = () => {
   console.log("API Starting.");
-  const app = express();
   initFirebaseAdmin();
+  const app = express();
 
   const apolloServer = new ApolloServer({
     typeDefs: schema,

@@ -22,8 +22,13 @@ export type Scalars = {
 export type User = {
   __typename?: "User";
   id: Scalars["String"];
-  hasFullAccount: Scalars["Boolean"];
   username?: Maybe<Scalars["String"]>;
+  hasFullAccount: Scalars["Boolean"];
+};
+
+export type UpdateUser = {
+  username?: Maybe<Scalars["String"]>;
+  description?: Maybe<Scalars["String"]>;
 };
 
 export type FirebaseUser = {
@@ -38,14 +43,31 @@ export type Query = {
   me?: Maybe<User>;
 };
 
+export type Token = {
+  __typename?: "Token";
+  token?: Maybe<Scalars["String"]>;
+};
+
 export type Mutation = {
   __typename?: "Mutation";
   signUp?: Maybe<FirebaseUser>;
+  signIn?: Maybe<FirebaseUser>;
+  updateUser?: Maybe<Token>;
 };
 
 export type MutationSignUpArgs = {
   email: Scalars["String"];
   password: Scalars["String"];
+};
+
+export type MutationSignInArgs = {
+  email: Scalars["String"];
+  password: Scalars["String"];
+};
+
+export type MutationUpdateUserArgs = {
+  id: Scalars["String"];
+  data?: Maybe<UpdateUser>;
 };
 
 export enum CacheControlScope {
@@ -164,8 +186,10 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars["String"]>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
   User: ResolverTypeWrapper<User>;
+  UpdateUser: UpdateUser;
   FirebaseUser: ResolverTypeWrapper<FirebaseUser>;
   Query: ResolverTypeWrapper<{}>;
+  Token: ResolverTypeWrapper<Token>;
   Mutation: ResolverTypeWrapper<{}>;
   CacheControlScope: CacheControlScope;
   Upload: ResolverTypeWrapper<Scalars["Upload"]>;
@@ -176,8 +200,10 @@ export type ResolversParentTypes = {
   String: Scalars["String"];
   Boolean: Scalars["Boolean"];
   User: User;
+  UpdateUser: UpdateUser;
   FirebaseUser: FirebaseUser;
   Query: {};
+  Token: Token;
   Mutation: {};
   CacheControlScope: CacheControlScope;
   Upload: Scalars["Upload"];
@@ -188,8 +214,8 @@ export type UserResolvers<
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
 > = {
   id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  hasFullAccount?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  hasFullAccount?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 };
 
@@ -210,6 +236,14 @@ export type QueryResolvers<
   me?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
 };
 
+export type TokenResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["Token"] = ResolversParentTypes["Token"]
+> = {
+  token?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+};
+
 export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
@@ -219,6 +253,18 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationSignUpArgs, "email" | "password">
+  >;
+  signIn?: Resolver<
+    Maybe<ResolversTypes["FirebaseUser"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationSignInArgs, "email" | "password">
+  >;
+  updateUser?: Resolver<
+    Maybe<ResolversTypes["Token"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateUserArgs, "id">
   >;
 };
 
@@ -231,6 +277,7 @@ export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
   FirebaseUser?: FirebaseUserResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Token?: TokenResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Upload?: GraphQLScalarType;
 };
