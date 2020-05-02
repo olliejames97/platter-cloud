@@ -11,6 +11,7 @@ export const userResolvers: Resolvers<Context> = {
   Mutation: {
     updateUser: async (_, args, ctx) => {
       console.log("update user " + JSON.stringify(args.data));
+
       if (!ctx.userToken && !ctx.user?.id) {
         throw new ApolloError(
           "Tried to update user, but no user present in context"
@@ -37,8 +38,11 @@ export const userResolvers: Resolvers<Context> = {
     },
     signUp: async (_, args, ctx) => {
       console.log("user signing up " + args.email);
-      if (ctx.user) {
-        throw new ApolloError("Tried to sign up a user that already exists");
+      if (ctx.user?.id) {
+        throw new ApolloError(
+          "Tried to sign up a user that already exists ",
+          JSON.stringify(ctx.user, null, 2)
+        );
       }
 
       const user = await admin

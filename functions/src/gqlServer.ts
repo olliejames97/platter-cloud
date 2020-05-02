@@ -26,14 +26,14 @@ const gqlServer = () => {
       const token = req.headers.authorization ?? null;
       console.log(
         "new request with token: ",
-        token ? (token as string).substr(0, 7) : "no token"
+        token ? (token as string).substr(0, 8) : null
       );
-      if (!token) {
+      if (!token || token === "no-token" || token === "null") {
         console.log("no token");
         const ctx: Context = { userToken: null, user: null };
         return ctx;
       }
-      const restOfUser = await getUserWithToken(token);
+      const restOfUser = await getUserWithToken(token).catch(() => null);
 
       // add the user to the context, check user gets through to me
       const ctx: Context = { userToken: token, user: restOfUser };
