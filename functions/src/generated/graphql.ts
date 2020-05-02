@@ -3,6 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from "graphql";
+
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = {
   [X in Exclude<keyof T, K>]?: T[X];
@@ -51,8 +52,7 @@ export type Token = {
 export type Mutation = {
   __typename?: "Mutation";
   signUp?: Maybe<FirebaseUser>;
-  signIn?: Maybe<FirebaseUser>;
-  updateUser?: Maybe<Token>;
+  updateUser?: Maybe<User>;
 };
 
 export type MutationSignUpArgs = {
@@ -60,13 +60,7 @@ export type MutationSignUpArgs = {
   password: Scalars["String"];
 };
 
-export type MutationSignInArgs = {
-  email: Scalars["String"];
-  password: Scalars["String"];
-};
-
 export type MutationUpdateUserArgs = {
-  id: Scalars["String"];
   data?: Maybe<UpdateUser>;
 };
 
@@ -254,17 +248,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationSignUpArgs, "email" | "password">
   >;
-  signIn?: Resolver<
-    Maybe<ResolversTypes["FirebaseUser"]>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationSignInArgs, "email" | "password">
-  >;
   updateUser?: Resolver<
-    Maybe<ResolversTypes["Token"]>,
+    Maybe<ResolversTypes["User"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationUpdateUserArgs, "id">
+    RequireFields<MutationUpdateUserArgs, never>
   >;
 };
 

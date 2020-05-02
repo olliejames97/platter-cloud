@@ -29,8 +29,7 @@ const schema = gql`
   type Mutation {
     # Sign up handles firebase
     signUp(email: String!, password: String!): FirebaseUser
-    signIn(email: String!, password: String!): FirebaseUser
-    updateUser(id: String!, data: UpdateUser): Token
+    updateUser(data: UpdateUser): User
   }
 `;
 
