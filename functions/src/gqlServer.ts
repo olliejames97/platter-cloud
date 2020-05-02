@@ -24,7 +24,10 @@ const gqlServer = () => {
     playground: true,
     context: async ({ req }) => {
       const token = req.headers.authorization ?? null;
-      console.log("new request with token: ", token);
+      console.log(
+        "new request with token: ",
+        token ? (token as string).substr(0, 7) : "no token"
+      );
       if (!token) {
         console.log("no token");
         const ctx: Context = { userToken: null, user: null };
