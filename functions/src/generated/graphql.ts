@@ -1,14 +1,7 @@
-import {
-  GraphQLResolveInfo,
-  GraphQLScalarType,
-  GraphQLScalarTypeConfig,
-} from "graphql";
-
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
-export type RequireFields<T, K extends keyof T> = {
-  [X in Exclude<keyof T, K>]?: T[X];
-} &
-  { [P in K]-?: NonNullable<T[P]> };
+export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -21,55 +14,92 @@ export type Scalars = {
 };
 
 export type User = {
-  __typename?: "User";
-  id: Scalars["String"];
-  username?: Maybe<Scalars["String"]>;
-  hasFullAccount: Scalars["Boolean"];
+   __typename?: 'User';
+  id: Scalars['String'];
+  username?: Maybe<Scalars['String']>;
+  hasFullAccount: Scalars['Boolean'];
 };
 
 export type UpdateUser = {
-  username?: Maybe<Scalars["String"]>;
-  description?: Maybe<Scalars["String"]>;
+  username?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
 };
 
 export type FirebaseUser = {
-  __typename?: "FirebaseUser";
-  id: Scalars["String"];
-  email?: Maybe<Scalars["String"]>;
+   __typename?: 'FirebaseUser';
+  id: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
-  __typename?: "Query";
-  hello?: Maybe<Scalars["String"]>;
+   __typename?: 'Query';
+  hello?: Maybe<Scalars['String']>;
   me?: Maybe<User>;
 };
 
 export type Token = {
-  __typename?: "Token";
-  token?: Maybe<Scalars["String"]>;
+   __typename?: 'Token';
+  token?: Maybe<Scalars['String']>;
+};
+
+export type File = {
+   __typename?: 'File';
+  id: Scalars['String'];
+};
+
+export type Tag = {
+   __typename?: 'Tag';
+  text: Scalars['String'];
+  id?: Maybe<Scalars['String']>;
+};
+
+export type Sample = {
+   __typename?: 'Sample';
+  id: Scalars['String'];
+  tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+  downloads?: Maybe<Scalars['Int']>;
+  userId: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
+};
+
+export type SampleInput = {
+  tagText?: Maybe<Array<Scalars['String']>>;
+  name?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
-  __typename?: "Mutation";
+   __typename?: 'Mutation';
   signUp?: Maybe<FirebaseUser>;
   updateUser?: Maybe<User>;
+  uploadSample: File;
 };
 
+
 export type MutationSignUpArgs = {
-  email: Scalars["String"];
-  password: Scalars["String"];
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
+
 
 export type MutationUpdateUserArgs = {
   data?: Maybe<UpdateUser>;
 };
 
+
+export type MutationUploadSampleArgs = {
+  file: Scalars['Upload'];
+};
+
 export enum CacheControlScope {
-  Public = "PUBLIC",
-  Private = "PRIVATE",
+  Public = 'PUBLIC',
+  Private = 'PRIVATE'
 }
 
+
+
+
 export type ResolverTypeWrapper<T> = Promise<T> | T;
+
 
 export type StitchingResolver<TResult, TParent, TContext, TArgs> = {
   fragment: string;
@@ -101,25 +131,9 @@ export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export interface SubscriptionSubscriberObject<
-  TResult,
-  TKey extends string,
-  TParent,
-  TContext,
-  TArgs
-> {
-  subscribe: SubscriptionSubscribeFn<
-    { [key in TKey]: TResult },
-    TParent,
-    TContext,
-    TArgs
-  >;
-  resolve?: SubscriptionResolveFn<
-    TResult,
-    { [key in TKey]: TResult },
-    TContext,
-    TArgs
-  >;
+export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
+  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
 }
 
 export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
@@ -127,26 +141,12 @@ export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
   resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
 }
 
-export type SubscriptionObject<
-  TResult,
-  TKey extends string,
-  TParent,
-  TContext,
-  TArgs
-> =
+export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<
-  TResult,
-  TKey extends string,
-  TParent = {},
-  TContext = {},
-  TArgs = {}
-> =
-  | ((
-      ...args: any[]
-    ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
@@ -155,19 +155,11 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type isTypeOfResolverFn<T = {}> = (
-  obj: T,
-  info: GraphQLResolveInfo
-) => boolean | Promise<boolean>;
+export type isTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<
-  TResult = {},
-  TParent = {},
-  TContext = {},
-  TArgs = {}
-> = (
+export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
@@ -177,101 +169,111 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  String: ResolverTypeWrapper<Scalars["String"]>;
-  Boolean: ResolverTypeWrapper<Scalars["Boolean"]>;
-  User: ResolverTypeWrapper<User>;
-  UpdateUser: UpdateUser;
-  FirebaseUser: ResolverTypeWrapper<FirebaseUser>;
-  Query: ResolverTypeWrapper<{}>;
-  Token: ResolverTypeWrapper<Token>;
-  Mutation: ResolverTypeWrapper<{}>;
-  CacheControlScope: CacheControlScope;
-  Upload: ResolverTypeWrapper<Scalars["Upload"]>;
+  String: ResolverTypeWrapper<Scalars['String']>,
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+  User: ResolverTypeWrapper<User>,
+  UpdateUser: UpdateUser,
+  FirebaseUser: ResolverTypeWrapper<FirebaseUser>,
+  Query: ResolverTypeWrapper<{}>,
+  Token: ResolverTypeWrapper<Token>,
+  File: ResolverTypeWrapper<File>,
+  Tag: ResolverTypeWrapper<Tag>,
+  Sample: ResolverTypeWrapper<Sample>,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
+  SampleInput: SampleInput,
+  Mutation: ResolverTypeWrapper<{}>,
+  CacheControlScope: CacheControlScope,
+  Upload: ResolverTypeWrapper<Scalars['Upload']>,
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  String: Scalars["String"];
-  Boolean: Scalars["Boolean"];
-  User: User;
-  UpdateUser: UpdateUser;
-  FirebaseUser: FirebaseUser;
-  Query: {};
-  Token: Token;
-  Mutation: {};
-  CacheControlScope: CacheControlScope;
-  Upload: Scalars["Upload"];
+  String: Scalars['String'],
+  Boolean: Scalars['Boolean'],
+  User: User,
+  UpdateUser: UpdateUser,
+  FirebaseUser: FirebaseUser,
+  Query: {},
+  Token: Token,
+  File: File,
+  Tag: Tag,
+  Sample: Sample,
+  Int: Scalars['Int'],
+  SampleInput: SampleInput,
+  Mutation: {},
+  CacheControlScope: CacheControlScope,
+  Upload: Scalars['Upload'],
 };
 
-export type UserResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
-> = {
-  id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  hasFullAccount?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  hasFullAccount?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
-export type FirebaseUserResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["FirebaseUser"] = ResolversParentTypes["FirebaseUser"]
-> = {
-  id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  email?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+export type FirebaseUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['FirebaseUser'] = ResolversParentTypes['FirebaseUser']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
-export type QueryResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
-> = {
-  hello?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  me?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
 };
 
-export type TokenResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["Token"] = ResolversParentTypes["Token"]
-> = {
-  token?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+export type TokenResolvers<ContextType = any, ParentType extends ResolversParentTypes['Token'] = ResolversParentTypes['Token']> = {
+  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
-export type MutationResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
-> = {
-  signUp?: Resolver<
-    Maybe<ResolversTypes["FirebaseUser"]>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationSignUpArgs, "email" | "password">
-  >;
-  updateUser?: Resolver<
-    Maybe<ResolversTypes["User"]>,
-    ParentType,
-    ContextType,
-    RequireFields<MutationUpdateUserArgs, never>
-  >;
+export type FileResolvers<ContextType = any, ParentType extends ResolversParentTypes['File'] = ResolversParentTypes['File']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
-export interface UploadScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes["Upload"], any> {
-  name: "Upload";
+export type TagResolvers<ContextType = any, ParentType extends ResolversParentTypes['Tag'] = ResolversParentTypes['Tag']> = {
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
+
+export type SampleResolvers<ContextType = any, ParentType extends ResolversParentTypes['Sample'] = ResolversParentTypes['Sample']> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  tags?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>,
+  downloads?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  signUp?: Resolver<Maybe<ResolversTypes['FirebaseUser']>, ParentType, ContextType, RequireFields<MutationSignUpArgs, 'email' | 'password'>>,
+  updateUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, never>>,
+  uploadSample?: Resolver<ResolversTypes['File'], ParentType, ContextType, RequireFields<MutationUploadSampleArgs, 'file'>>,
+};
+
+export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload'
 }
 
 export type Resolvers<ContextType = any> = {
-  User?: UserResolvers<ContextType>;
-  FirebaseUser?: FirebaseUserResolvers<ContextType>;
-  Query?: QueryResolvers<ContextType>;
-  Token?: TokenResolvers<ContextType>;
-  Mutation?: MutationResolvers<ContextType>;
-  Upload?: GraphQLScalarType;
+  User?: UserResolvers<ContextType>,
+  FirebaseUser?: FirebaseUserResolvers<ContextType>,
+  Query?: QueryResolvers<ContextType>,
+  Token?: TokenResolvers<ContextType>,
+  File?: FileResolvers<ContextType>,
+  Tag?: TagResolvers<ContextType>,
+  Sample?: SampleResolvers<ContextType>,
+  Mutation?: MutationResolvers<ContextType>,
+  Upload?: GraphQLScalarType,
 };
+
 
 /**
  * @deprecated
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
  */
 export type IResolvers<ContextType = any> = Resolvers<ContextType>;
+

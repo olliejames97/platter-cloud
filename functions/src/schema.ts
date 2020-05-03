@@ -26,10 +26,33 @@ const schema = gql`
     token: String
   }
 
+  type File {
+    id: String!
+  }
+
+  type Tag {
+    text: String!
+    id: String
+  }
+
+  type Sample {
+    id: String!
+    tags: [String]
+    downloads: Int!
+    userId: String!
+    url: String
+  }
+
+  input SampleInput {
+    tagText: [String!]
+    name: String
+  }
+
   type Mutation {
     # Sign up handles firebase
     signUp(email: String!, password: String!): FirebaseUser
     updateUser(data: UpdateUser): User
+    uploadSample(file: Upload!): File!
   }
 `;
 
