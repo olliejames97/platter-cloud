@@ -25,11 +25,11 @@ export const fetchDbUser = async (id: string): Promise<DBUser> => {
   return {
     id: data.id,
     username: data?.username ?? undefined,
-    sampleIds: [],
+    sampleIds: [], // TODO!
   };
 };
 
-export const rewriteUser = async (
+export const updateUser = async (
   id: string,
   data: Partial<Omit<DBUser, "id">>
 ): Promise<DBUser> => {

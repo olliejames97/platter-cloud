@@ -3,7 +3,7 @@ import { Resolvers, User } from "../generated/graphql";
 import { Context } from "../gqlServer";
 import { ApolloError } from "apollo-server-express";
 import * as admin from "firebase-admin";
-import { rewriteUser } from "./database";
+import { updateUser } from "./database";
 import { DBUser } from "./types";
 import * as _ from "lodash";
 import { getUserIdFirebase } from "../auth";
@@ -30,7 +30,7 @@ export const userResolvers: Resolvers<Context> = {
       }
 
       return resolveDbUser(
-        await rewriteUser(id, {
+        await updateUser(id, {
           ...args.data,
           username: args.data?.username ?? undefined,
         })
