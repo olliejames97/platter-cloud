@@ -7,8 +7,14 @@ const samplebase = () => {
 };
 
 export const writeSample = async (sample: DBSample) => {
-  console.log("writing sample to DB ", sample);
-  await samplebase().doc(sample.id).set(sample).catch(console.error);
+  console.log("writing sample to DB ", sample.id);
+  await samplebase()
+    .doc(sample.id)
+    .set(sample)
+    .catch(console.error)
+    .then((e) => {
+      console.log("written ", e);
+    });
 };
 
 export const fetchDbSample = async (id: string): Promise<DBSample> => {

@@ -36,6 +36,7 @@ const schema = gql`
   }
 
   type Sample {
+    name: String
     id: String!
     tags: [String]
     downloads: Int!

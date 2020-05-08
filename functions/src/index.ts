@@ -4,6 +4,7 @@ import { isProd } from "./config";
 import { createUser } from "./users/helpers";
 import { createSample } from "./samples/helpers";
 import { DBSample } from "./samples/types";
+import { uuid } from "uuidv4";
 
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
@@ -51,7 +52,7 @@ const fileToDbSample = (
     return null;
   }
   return {
-    id: file.id,
+    id: uuid(),
     userLink: {
       type: "user",
       id: "not-implemented", // attach to metadata in app
