@@ -26,7 +26,7 @@ const gqlServer = () => {
       const token = req.headers.authorization ?? null;
       console.log(
         "new request with token: ",
-        token ? (token as string).substr(0, 8) : null
+        token ? (token as string).substr(0, 9) : null
       );
       if (!token || token === "no-token" || token === "null") {
         console.log("no token");

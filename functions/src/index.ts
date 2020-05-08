@@ -51,6 +51,8 @@ const fileToDbSample = (
   if (!file || !file.name || !file.mediaLink) {
     return null;
   }
+  console.log("file owner: ", file.owner);
+  console.log("file metadata: ", file.metadata);
   return {
     id: uuid(),
     userLink: {

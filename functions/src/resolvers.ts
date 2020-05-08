@@ -1,10 +1,16 @@
 import { Resolvers } from "./generated/graphql";
 import { userResolvers } from "./users/resolvers";
 import _ = require("lodash");
+import { Context } from "./gqlServer";
 
-const resolverFunctions: Resolvers = {
+const resolverFunctions: Resolvers<Context> = {
   Query: {
-    hello: () => "hello",
+    hello: (_, __, context) => {
+      const me = context.user
+        ? context.user
+        : context.userToken ?? "no user data in query";
+      return "hello " + JSON.stringify(me);
+    },
   },
 };
 
