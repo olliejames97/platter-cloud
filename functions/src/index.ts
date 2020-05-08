@@ -1,11 +1,15 @@
 import * as functions from "firebase-functions";
 import gqlServer from "./gqlServer";
 import { isProd } from "./config";
-import { createUser, getUserWithToken } from "./users/helpers";
+import {
+  createUser,
+  getUserWithToken,
+  writeSampleIdToUser,
+} from "./users/helpers";
 import { createSample } from "./samples/helpers";
-import { DBSample } from "./samples/types";
-import { uuid } from "uuidv4";
 import * as admin from "firebase-admin";
+
+import { UserLink } from "./links/links";
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
 
@@ -37,47 +41,45 @@ export const onStorageChange = functions.storage
   .onFinalize(async (e) => {
     // Refactor to samples/
     console.log("new file ", e.name, e);
-    const sample = await fileToDbSample(e).catch();
-    if (!sample) {
-      console.log("file not valid, or user not found");
-      if (!e.name) {
-        console.error("Error getting file name, can'te delete");
-        return null;
-      }
-      admin.storage().bucket().file(e.name).delete();
-      return null;
-    }
-    await createSample(sample).catch(console.error);
+    fileWrite(e);
     return true;
   });
 
-const fileToDbSample = async (
-  file: functions.storage.ObjectMetadata
-): Promise<DBSample | null> => {
+const fileWrite = async (file: functions.storage.ObjectMetadata) => {
   if (
     !file ||
     !file.name ||
     !file.mediaLink ||
     !file.metadata ||
-    !file.metadata.token
+    !file.metadata.token ||
+    !file.metadata.id
   ) {
     return null;
   }
   console.log("file owner: ", file.owner);
   const uploaderToken = file.metadata.token;
-
+  const id = file.metadata.id;
   const user = await getUserWithToken(uploaderToken);
   if (!user || !user.id) {
     console.log("error getting user");
     return null;
   }
-  return {
-    id: uuid(),
-    userLink: {
+  writeSampleIdToUser(user.id, id);
+  const sample = {
+    id,
+    userLink: <UserLink>{
       type: "user",
       id: user.id, // attach to metadata in app
     },
     url: file.mediaLink,
     name: file.name,
   };
+  if (!sample) {
+    console.warn("file not valid, or user not found, deleting");
+    admin.storage().bucket().file(file.name).delete();
+    return null;
+  }
+
+  await createSample(sample).catch(console.error);
+  return true;
 };

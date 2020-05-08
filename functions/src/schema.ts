@@ -5,6 +5,7 @@ const schema = gql`
     id: String!
     username: String
     hasFullAccount: Boolean!
+    samples: [Sample!]
   }
 
   input UpdateUser {
@@ -20,6 +21,7 @@ const schema = gql`
   type Query {
     hello: String
     me: User
+    getSamples(ids: [String!]!): Boolean
   }
 
   type Token {
@@ -40,7 +42,7 @@ const schema = gql`
     id: String!
     tags: [String]
     downloads: Int!
-    userId: String!
+    user: User!
     url: String
   }
 

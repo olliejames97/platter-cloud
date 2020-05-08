@@ -42,6 +42,11 @@ export type Query = {
   __typename?: "Query";
   hello?: Maybe<Scalars["String"]>;
   me?: Maybe<User>;
+  getSamples?: Maybe<Scalars["Boolean"]>;
+};
+
+export type QueryGetSamplesArgs = {
+  ids: Array<Scalars["String"]>;
 };
 
 export type Token = {
@@ -62,10 +67,11 @@ export type Tag = {
 
 export type Sample = {
   __typename?: "Sample";
+  name?: Maybe<Scalars["String"]>;
   id: Scalars["String"];
   tags?: Maybe<Array<Maybe<Scalars["String"]>>>;
-  downloads?: Maybe<Scalars["Int"]>;
-  userId: Scalars["String"];
+  downloads: Scalars["Int"];
+  user: User;
   url?: Maybe<Scalars["String"]>;
 };
 
@@ -268,6 +274,12 @@ export type QueryResolvers<
 > = {
   hello?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   me?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  getSamples?: Resolver<
+    Maybe<ResolversTypes["Boolean"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetSamplesArgs, "ids">
+  >;
 };
 
 export type TokenResolvers<
@@ -299,14 +311,15 @@ export type SampleResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["Sample"] = ResolversParentTypes["Sample"]
 > = {
+  name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   tags?: Resolver<
     Maybe<Array<Maybe<ResolversTypes["String"]>>>,
     ParentType,
     ContextType
   >;
-  downloads?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
-  userId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  downloads?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 };

@@ -25,7 +25,7 @@ export const fetchDbUser = async (id: string): Promise<DBUser> => {
   return {
     id: data.id,
     username: data?.username ?? undefined,
-    sampleIds: [], // TODO!
+    sampleLinks: data?.sampleLinks ?? undefined,
   };
 };
 
