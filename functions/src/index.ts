@@ -5,7 +5,7 @@ import { createUser, getUserWithToken } from "./users/helpers";
 import { createSample } from "./samples/helpers";
 import { DBSample } from "./samples/types";
 import { uuid } from "uuidv4";
-
+import * as admin from "firebase-admin";
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
 
@@ -37,10 +37,14 @@ export const onStorageChange = functions.storage
   .onFinalize(async (e) => {
     // Refactor to samples/
     console.log("new file ", e.name, e);
-    const sample = await fileToDbSample(e);
+    const sample = await fileToDbSample(e).catch();
     if (!sample) {
       console.log("file not valid, or user not found");
-      // delete sampple
+      if (!e.name) {
+        console.error("Error getting file name, can'te delete");
+        return null;
+      }
+      admin.storage().bucket().file(e.name).delete();
       return null;
     }
     await createSample(sample).catch(console.error);
@@ -61,6 +65,7 @@ const fileToDbSample = async (
   }
   console.log("file owner: ", file.owner);
   const uploaderToken = file.metadata.token;
+
   const user = await getUserWithToken(uploaderToken);
   if (!user || !user.id) {
     console.log("error getting user");
