@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import gqlServer from "./gqlServer";
 import { isProd } from "./config";
-import { createUser } from "./users/helpers";
+import { createUser, getUserWithToken } from "./users/helpers";
 import { createSample } from "./samples/helpers";
 import { DBSample } from "./samples/types";
 import { uuid } from "uuidv4";
@@ -35,29 +35,42 @@ export const api = functions.https.onRequest(server);
 export const onStorageChange = functions.storage
   .object()
   .onFinalize(async (e) => {
+    // Refactor to samples/
     console.log("new file ", e.name, e);
-    const sample = fileToDbSample(e);
+    const sample = await fileToDbSample(e);
     if (!sample) {
-      console.log("file not valid");
+      console.log("file not valid, or user not found");
+      // delete sampple
       return null;
     }
     await createSample(sample).catch(console.error);
     return true;
   });
 
-const fileToDbSample = (
+const fileToDbSample = async (
   file: functions.storage.ObjectMetadata
-): DBSample | null => {
-  if (!file || !file.name || !file.mediaLink) {
+): Promise<DBSample | null> => {
+  if (
+    !file ||
+    !file.name ||
+    !file.mediaLink ||
+    !file.metadata ||
+    !file.metadata.token
+  ) {
     return null;
   }
   console.log("file owner: ", file.owner);
-  console.log("file metadata: ", file.metadata);
+  const uploaderToken = file.metadata.token;
+  const user = await getUserWithToken(uploaderToken);
+  if (!user || !user.id) {
+    console.log("error getting user");
+    return null;
+  }
   return {
     id: uuid(),
     userLink: {
       type: "user",
-      id: "not-implemented", // attach to metadata in app
+      id: user.id, // attach to metadata in app
     },
     url: file.mediaLink,
     name: file.name,
