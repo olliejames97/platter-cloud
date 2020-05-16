@@ -1,6 +1,8 @@
 import * as admin from "firebase-admin";
 import { DBSample } from "./types";
 import { ApolloError } from "apollo-server-express";
+import { Sample } from "../generated/graphql";
+import { resolveUserLink } from "../links/links";
 
 const samplebase = () => {
   return admin.firestore().collection("samples");
@@ -54,4 +56,12 @@ export const updateSample = async (
       throw new ApolloError("Couldn't rewrite sample");
     });
   return await fetchDbSample(id);
+};
+
+export const dbSampleToSampple = async (db: DBSample): Promise<Sample> => {
+  return {
+    downloads: 0,
+    id: db.id,
+    user: await resolveUserLink(db.userLink),
+  };
 };

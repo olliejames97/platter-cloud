@@ -1,4 +1,5 @@
 import { getUser } from "../users/helpers";
+import { getSample } from "../samples/helpers";
 
 interface BaseLink {
   id: string;
@@ -14,3 +15,5 @@ export interface UserLink extends BaseLink {
 }
 
 export const resolveUserLink = (link: UserLink) => getUser(link.id);
+
+export const resolveSampleLink = (link: UserLink) => getSample(link.id);
