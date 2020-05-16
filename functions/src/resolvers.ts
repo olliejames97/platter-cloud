@@ -2,6 +2,7 @@ import { Resolvers } from "./generated/graphql";
 import { userResolvers } from "./users/resolvers";
 import _ = require("lodash");
 import { Context } from "./gqlServer";
+import { sampleResolvers } from "./samples/resolvers";
 
 const resolverFunctions: Resolvers<Context> = {
   Query: {
@@ -14,6 +15,6 @@ const resolverFunctions: Resolvers<Context> = {
   },
 };
 
-_.merge(resolverFunctions, userResolvers);
+_.merge(resolverFunctions, userResolvers, sampleResolvers);
 
 export default resolverFunctions as any;

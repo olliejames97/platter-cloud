@@ -49,7 +49,8 @@ const schema = gql`
 
   input SampleInput {
     tagText: [String!]
-    name: String
+    url: String!
+    name: String!
   }
 
   type Mutation {

@@ -10,6 +10,7 @@ const tagbase = () => {
 
 export const writeTag = async (tag: DBTag) => {
   console.log("writing tag to DB ", tag.id);
+  // need to get id then write
   await tagbase()
     .doc(tag.id)
     .set(tag)

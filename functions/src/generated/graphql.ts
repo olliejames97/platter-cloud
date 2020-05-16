@@ -79,7 +79,8 @@ export type Sample = {
 
 export type SampleInput = {
   tagText?: Maybe<Array<Scalars["String"]>>;
-  name?: Maybe<Scalars["String"]>;
+  url: Scalars["String"];
+  name: Scalars["String"];
 };
 
 export type Mutation = {

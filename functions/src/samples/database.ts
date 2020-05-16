@@ -2,24 +2,27 @@ import * as admin from "firebase-admin";
 import { DBSample } from "./types";
 import { ApolloError } from "apollo-server-express";
 import { Sample } from "../generated/graphql";
-import {
-  resolveUserLink,
-  resolveSampleLink,
-  resolveTagLink,
-} from "../links/links";
+import { resolveUserLink, resolveTagLink } from "../links/links";
 
 const samplebase = () => {
   return admin.firestore().collection("samples");
 };
 
-export const writeSample = async (sample: DBSample) => {
-  console.log("writing sample to DB ", sample.id);
-  await samplebase()
-    .doc(sample.id)
-    .set(sample)
+export const writeSample = async (
+  sample: Omit<DBSample, "id">
+): Promise<string> => {
+  console.log("writing sample to DB ", sample.name);
+  return await samplebase()
+    .add({
+      sample,
+    })
     .catch(console.error)
-    .then((e) => {
-      console.log("written ", e);
+    .then((ref) => {
+      if (!ref) {
+        throw new ApolloError("Couldn't write");
+      }
+      console.log("written ", ref.id);
+      return ref.id;
     });
 };
 
@@ -30,14 +33,35 @@ export const fetchDbSample = async (id: string): Promise<DBSample> => {
     .catch(() => {
       throw new ApolloError("Couldn't get sample");
     });
-  const data = doc.data();
-  if (!data || !data.id) {
-    throw new ApolloError("Couldn't fetch sample");
+
+  if (!doc.exists) {
+    throw new ApolloError("Sample doesn't exist");
   }
 
+  if (!doc.ref || !doc.ref.id) {
+    throw new ApolloError(
+      "Couldn't fetch sample " +
+        JSON.stringify(doc.ref) +
+        "   " +
+        JSON.stringify(doc, null, 2)
+    );
+  }
+  const data = doc.data();
   // todo move null checks up and throw if null
+  if (!data || !doc.id) {
+    console.log("no data or no doc id");
+    throw new ApolloError("No doc id");
+  }
+  console.log("writing", data, {
+    id: "fix fetchDbSample",
+    name: data?.name,
+    tagLinks: data?.tagLinks,
+    userLink: data?.userLink,
+    url: data?.url,
+  });
+
   return {
-    id: data.id,
+    id: "fix fetchDbSample",
     name: data?.name,
     tagLinks: data?.tagLinks,
     userLink: data?.userLink,
@@ -63,6 +87,7 @@ export const updateSample = async (
 };
 
 export const dbSampleToSample = async (db: DBSample): Promise<Sample> => {
+  console.log("resolving sample ", db, db.id);
   return {
     downloads: 0,
     id: db.id,

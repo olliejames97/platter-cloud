@@ -29,7 +29,6 @@ const gqlServer = () => {
         token ? (token as string).substr(0, 9) : null
       );
       if (!token || token === "no-token" || token === "null") {
-        console.log("no token");
         const ctx: Context = { userToken: null, user: null };
         return ctx;
       }
