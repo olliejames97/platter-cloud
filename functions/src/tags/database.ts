@@ -60,6 +60,5 @@ export const dbTagToTag = (db: DBTag): Tag => {
   return {
     id: db.id,
     title: db.title,
-    // sa,
   };
 };

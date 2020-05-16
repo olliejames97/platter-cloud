@@ -41,7 +41,7 @@ const schema = gql`
   type Sample {
     name: String
     id: String!
-    tags: [String]
+    tags: [Tag]
     downloads: Int!
     user: User!
     url: String
@@ -56,7 +56,7 @@ const schema = gql`
     # Sign up handles firebase
     signUp(email: String!, password: String!): FirebaseUser
     updateUser(data: UpdateUser): User
-    uploadSample(file: Upload!): File!
+    newSample(sample: SampleInput): Sample
   }
 `;
 

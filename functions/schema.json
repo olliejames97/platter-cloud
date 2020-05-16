@@ -1156,7 +1156,7 @@
               "deprecationReason": null
             },
             {
-              "name": "sampleLinks",
+              "name": "samples",
               "description": null,
               "args": [],
               "type": {
@@ -1222,8 +1222,8 @@
                 "kind": "LIST",
                 "name": null,
                 "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
+                  "kind": "OBJECT",
+                  "name": "Tag",
                   "ofType": null
                 }
               },
@@ -1399,32 +1399,24 @@
               "deprecationReason": null
             },
             {
-              "name": "uploadSample",
+              "name": "newSample",
               "description": null,
               "args": [
                 {
-                  "name": "file",
+                  "name": "sample",
                   "description": null,
                   "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Upload",
-                      "ofType": null
-                    }
+                    "kind": "INPUT_OBJECT",
+                    "name": "SampleInput",
+                    "ofType": null
                   },
                   "defaultValue": null
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "File",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Sample",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null

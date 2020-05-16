@@ -2,7 +2,11 @@ import * as admin from "firebase-admin";
 import { DBSample } from "./types";
 import { ApolloError } from "apollo-server-express";
 import { Sample } from "../generated/graphql";
-import { resolveUserLink } from "../links/links";
+import {
+  resolveUserLink,
+  resolveSampleLink,
+  resolveTagLink,
+} from "../links/links";
 
 const samplebase = () => {
   return admin.firestore().collection("samples");
@@ -58,10 +62,17 @@ export const updateSample = async (
   return await fetchDbSample(id);
 };
 
-export const dbSampleToSampple = async (db: DBSample): Promise<Sample> => {
+export const dbSampleToSample = async (db: DBSample): Promise<Sample> => {
   return {
     downloads: 0,
     id: db.id,
     user: await resolveUserLink(db.userLink),
+    tags:
+      db.tagLinks &&
+      (await Promise.all(
+        db.tagLinks.map((tl) => {
+          return resolveTagLink(tl);
+        })
+      )),
   };
 };

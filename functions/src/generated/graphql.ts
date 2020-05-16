@@ -64,14 +64,14 @@ export type Tag = {
   __typename?: "Tag";
   id: Scalars["String"];
   title: Scalars["String"];
-  sampleLinks?: Maybe<Array<Sample>>;
+  samples?: Maybe<Array<Sample>>;
 };
 
 export type Sample = {
   __typename?: "Sample";
   name?: Maybe<Scalars["String"]>;
   id: Scalars["String"];
-  tags?: Maybe<Array<Maybe<Scalars["String"]>>>;
+  tags?: Maybe<Array<Maybe<Tag>>>;
   downloads: Scalars["Int"];
   user: User;
   url?: Maybe<Scalars["String"]>;
@@ -86,7 +86,7 @@ export type Mutation = {
   __typename?: "Mutation";
   signUp?: Maybe<FirebaseUser>;
   updateUser?: Maybe<User>;
-  uploadSample: File;
+  newSample?: Maybe<Sample>;
 };
 
 export type MutationSignUpArgs = {
@@ -98,8 +98,8 @@ export type MutationUpdateUserArgs = {
   data?: Maybe<UpdateUser>;
 };
 
-export type MutationUploadSampleArgs = {
-  file: Scalars["Upload"];
+export type MutationNewSampleArgs = {
+  sample?: Maybe<SampleInput>;
 };
 
 export enum CacheControlScope {
@@ -311,7 +311,7 @@ export type TagResolvers<
 > = {
   id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  sampleLinks?: Resolver<
+  samples?: Resolver<
     Maybe<Array<ResolversTypes["Sample"]>>,
     ParentType,
     ContextType
@@ -326,7 +326,7 @@ export type SampleResolvers<
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   tags?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes["String"]>>>,
+    Maybe<Array<Maybe<ResolversTypes["Tag"]>>>,
     ParentType,
     ContextType
   >;
@@ -352,11 +352,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationUpdateUserArgs, never>
   >;
-  uploadSample?: Resolver<
-    ResolversTypes["File"],
+  newSample?: Resolver<
+    Maybe<ResolversTypes["Sample"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationUploadSampleArgs, "file">
+    RequireFields<MutationNewSampleArgs, never>
   >;
 };
 
