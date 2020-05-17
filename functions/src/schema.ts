@@ -33,7 +33,6 @@ const schema = gql`
   }
 
   type Tag {
-    id: String!
     title: String!
     samples: [Sample!]
   }

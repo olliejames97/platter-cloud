@@ -1,15 +1,8 @@
 import * as functions from "firebase-functions";
 import gqlServer from "./gqlServer";
 import { isProd } from "./config";
-import {
-  createUser,
-  getUserWithToken,
-  writeSampleIdToUser,
-} from "./users/helpers";
-import { createSample } from "./samples/helpers";
-import * as admin from "firebase-admin";
+import { createUser } from "./users/helpers";
 
-import { UserLink } from "./links/links";
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
 
@@ -35,51 +28,3 @@ export const onFirebaseSignup = functions.auth.user().onCreate(async (user) => {
 });
 
 export const api = functions.https.onRequest(server);
-
-export const onStorageChange = functions.storage
-  .object()
-  .onFinalize(async (e) => {
-    // Refactor to samples/
-    console.log("new file ", e.name, e);
-    fileWrite(e);
-    return true;
-  });
-
-const fileWrite = async (file: functions.storage.ObjectMetadata) => {
-  if (
-    !file ||
-    !file.name ||
-    !file.mediaLink ||
-    !file.metadata ||
-    !file.metadata.token ||
-    !file.metadata.id
-  ) {
-    return null;
-  }
-  console.log("file owner: ", file.owner);
-  const uploaderToken = file.metadata.token;
-  const id = file.metadata.id;
-  const user = await getUserWithToken(uploaderToken);
-  if (!user || !user.id) {
-    console.log("error getting user");
-    return null;
-  }
-  writeSampleIdToUser(user.id, id);
-  const sample = {
-    id,
-    userLink: <UserLink>{
-      type: "user",
-      id: user.id, // attach to metadata in app
-    },
-    url: file.mediaLink,
-    name: file.name,
-  };
-  if (!sample) {
-    console.warn("file not valid, or user not found, deleting");
-    admin.storage().bucket().file(file.name).delete();
-    return null;
-  }
-
-  await createSample(sample).catch(console.error);
-  return true;
-};

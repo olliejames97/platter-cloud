@@ -9,24 +9,22 @@ const samplebase = () => {
 };
 
 export const writeSample = async (
+  id: string,
   sample: Omit<DBSample, "id">
 ): Promise<string> => {
-  console.log("writing sample to DB ", sample.name);
-  return await samplebase()
-    .add({
-      sample,
-    })
-    .catch(console.error)
-    .then((ref) => {
-      if (!ref) {
-        throw new ApolloError("Couldn't write");
-      }
-      console.log("written ", ref.id);
-      return ref.id;
+  console.log("writing sample to DB with name ", sample.name);
+  await samplebase()
+    .doc(id)
+    .set(sample)
+    .catch(() => {
+      throw new ApolloError("Error writing sample to DB");
     });
+
+  return id;
 };
 
 export const fetchDbSample = async (id: string): Promise<DBSample> => {
+  console.log("Getting sample with Id", id);
   const doc = await samplebase()
     .doc(id)
     .get()
@@ -52,16 +50,15 @@ export const fetchDbSample = async (id: string): Promise<DBSample> => {
     console.log("no data or no doc id");
     throw new ApolloError("No doc id");
   }
-  console.log("writing", data, {
-    id: "fix fetchDbSample",
+  console.log("sample: ", {
+    id,
     name: data?.name,
     tagLinks: data?.tagLinks,
     userLink: data?.userLink,
     url: data?.url,
   });
-
   return {
-    id: "fix fetchDbSample",
+    id,
     name: data?.name,
     tagLinks: data?.tagLinks,
     userLink: data?.userLink,
@@ -83,21 +80,30 @@ export const updateSample = async (
     .catch(() => {
       throw new ApolloError("Couldn't rewrite sample");
     });
+  console.log("here");
   return await fetchDbSample(id);
 };
 
 export const dbSampleToSample = async (db: DBSample): Promise<Sample> => {
-  console.log("resolving sample ", db, db.id);
+  console.log("resolving sample ", db.id);
+
+  const tags = await Promise.all(
+    db.tagLinks.map(async (tl) => {
+      console.log("resolving a tag link");
+      const tag = await resolveTagLink(tl);
+      if (!tag) {
+        throw new ApolloError("No tag");
+      }
+      return tag;
+    })
+  );
+
   return {
     downloads: 0,
     id: db.id,
     user: await resolveUserLink(db.userLink),
-    tags:
-      db.tagLinks &&
-      (await Promise.all(
-        db.tagLinks.map((tl) => {
-          return resolveTagLink(tl);
-        })
-      )),
+    name: db.name,
+    url: db.url,
+    tags,
   };
 };

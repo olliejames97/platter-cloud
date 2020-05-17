@@ -2,39 +2,76 @@ import { DBTag } from "./types";
 import * as admin from "firebase-admin";
 import { ApolloError } from "apollo-server-express";
 import { Tag } from "../generated/graphql";
+import { resolveSampleLink } from "../links/links";
 // import { Tag } from "../generated/graphql";
 
 const tagbase = () => {
   return admin.firestore().collection("tags");
 };
 
-export const writeTag = async (tag: DBTag) => {
-  console.log("writing tag to DB ", tag.id);
+export const writeTag = async (tag: DBTag): Promise<boolean> => {
+  console.log("writing tag to DB ", tag.title);
   // need to get id then write
-  await tagbase()
-    .doc(tag.id)
+  return await tagbase()
+    .doc(tag.title)
     .set(tag)
-    .catch(console.error)
-    .then((e) => {
-      console.log("written ", e);
+    .then((e) => true)
+    .catch((e) => {
+      console.error(e);
+      return false;
     });
 };
 
-export const fetchDbTag = async (id: string): Promise<DBTag> => {
+export const addSampleToTag = async (tagTitle: string, sampleId: string) => {
+  console.log("adding sample to tag ", tagTitle, sampleId);
+  const existingTag = await fetchDbTag(tagTitle);
+  if (existingTag) {
+    const result = await updateTag(tagTitle, {
+      title: tagTitle,
+      sampleLinks: [
+        ...existingTag.sampleLinks,
+        {
+          id: sampleId,
+          type: "sample",
+        },
+      ],
+    }).catch(() => {
+      throw new ApolloError("Error updating tag");
+    });
+    return result;
+  }
+
+  await writeTag({
+    title: tagTitle,
+    sampleLinks: [
+      {
+        id: sampleId,
+        type: "sample",
+      },
+    ],
+  }).catch(() => {
+    throw new ApolloError("Error writing new tag");
+  });
+
+  return await fetchDbTag(tagTitle);
+};
+
+export const fetchDbTag = async (title: string): Promise<DBTag | undefined> => {
   const doc = await tagbase()
-    .doc(id)
+    .doc(title)
     .get()
     .catch(() => {
       throw new ApolloError("Couldn't get tag");
     });
-  const data = doc.data();
-  if (!data || !data.id) {
-    throw new ApolloError("Couldn't fetch sample");
-  }
 
+  const data = doc.data();
+  if (!data || !data.title) {
+    console.log("no tag exists");
+    return undefined;
+  }
+  console.log("fetching db tag");
   // todo move null checks up and throw if null
   return {
-    id: data.id,
     sampleLinks: data?.sampleLinks,
     title: data?.title,
   };
@@ -54,12 +91,20 @@ export const updateTag = async (
     .catch(() => {
       throw new ApolloError("Couldn't rewrite sample");
     });
-  return await fetchDbTag(id);
+
+  const tag = await fetchDbTag(id);
+  if (!tag) {
+    throw new ApolloError("Couldn't fetch tag");
+  }
+  return tag;
 };
 
-export const dbTagToTag = (db: DBTag): Tag => {
+export const dbTagToTag = async (db: DBTag): Promise<Tag> => {
   return {
-    id: db.id,
+    id: "depracated",
     title: db.title,
+    samples: await Promise.all(
+      db.sampleLinks.map(async (sl) => await resolveSampleLink(sl))
+    ),
   };
 };
