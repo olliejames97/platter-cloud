@@ -76,10 +76,14 @@ export const userResolvers: Resolvers<Context> = {
   },
 };
 
-export const resolveDbUser = async (user: DBUser): Promise<User> => {
+export const resolveDbUser = async (
+  user: DBUser,
+  withSamples: boolean = true
+): Promise<User> => {
   return {
     id: user.id,
     username: user.username,
     hasFullAccount: user.username ? true : false,
+    // samples: withSamples ? user.sampleLinks?.map((sl) => ()) : undefined
   };
 };

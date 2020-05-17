@@ -37,12 +37,21 @@ const schema = gql`
     samples: [Sample!]
   }
 
+  type TagText {
+    name: String!
+  }
+
+  type UserLink {
+    id: String!
+    name: String
+  }
+
   type Sample {
     name: String
     id: String!
-    tags: [Tag]
+    tagLink: [TagText]
     downloads: Int!
-    user: User!
+    user: UserLink!
     url: String
   }
 

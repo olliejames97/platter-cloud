@@ -101,7 +101,6 @@ export const updateTag = async (
 
 export const dbTagToTag = async (db: DBTag): Promise<Tag> => {
   return {
-    id: "depracated",
     title: db.title,
     samples: await Promise.all(
       db.sampleLinks.map(async (sl) => await resolveSampleLink(sl))

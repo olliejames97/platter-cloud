@@ -1,8 +1,7 @@
 import * as admin from "firebase-admin";
 import { DBSample } from "./types";
 import { ApolloError } from "apollo-server-express";
-import { Sample } from "../generated/graphql";
-import { resolveUserLink, resolveTagLink } from "../links/links";
+import { Sample, TagText } from "../generated/graphql";
 
 const samplebase = () => {
   return admin.firestore().collection("samples");
@@ -87,23 +86,18 @@ export const updateSample = async (
 export const dbSampleToSample = async (db: DBSample): Promise<Sample> => {
   console.log("resolving sample ", db.id);
 
-  const tags = await Promise.all(
-    db.tagLinks.map(async (tl) => {
-      console.log("resolving a tag link");
-      const tag = await resolveTagLink(tl);
-      if (!tag) {
-        throw new ApolloError("No tag");
-      }
-      return tag;
-    })
-  );
-
   return {
     downloads: 0,
     id: db.id,
-    user: await resolveUserLink(db.userLink),
+    user: {
+      id: db.userLink.id,
+    },
     name: db.name,
     url: db.url,
-    tags,
+    tagLink: db.tagLinks.map(
+      (tl): TagText => ({
+        name: tl.id,
+      })
+    ),
   };
 };

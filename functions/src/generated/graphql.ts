@@ -62,18 +62,28 @@ export type File = {
 
 export type Tag = {
   __typename?: "Tag";
-  id: Scalars["String"];
   title: Scalars["String"];
   samples?: Maybe<Array<Sample>>;
+};
+
+export type TagText = {
+  __typename?: "TagText";
+  name: Scalars["String"];
+};
+
+export type UserLink = {
+  __typename?: "UserLink";
+  id: Scalars["String"];
+  name?: Maybe<Scalars["String"]>;
 };
 
 export type Sample = {
   __typename?: "Sample";
   name?: Maybe<Scalars["String"]>;
   id: Scalars["String"];
-  tags?: Maybe<Array<Maybe<Tag>>>;
+  tagLink?: Maybe<Array<Maybe<TagText>>>;
   downloads: Scalars["Int"];
-  user: User;
+  user: UserLink;
   url?: Maybe<Scalars["String"]>;
 };
 
@@ -225,6 +235,8 @@ export type ResolversTypes = {
   Token: ResolverTypeWrapper<Token>;
   File: ResolverTypeWrapper<File>;
   Tag: ResolverTypeWrapper<Tag>;
+  TagText: ResolverTypeWrapper<TagText>;
+  UserLink: ResolverTypeWrapper<UserLink>;
   Sample: ResolverTypeWrapper<Sample>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
   SampleInput: SampleInput;
@@ -244,6 +256,8 @@ export type ResolversParentTypes = {
   Token: Token;
   File: File;
   Tag: Tag;
+  TagText: TagText;
+  UserLink: UserLink;
   Sample: Sample;
   Int: Scalars["Int"];
   SampleInput: SampleInput;
@@ -310,7 +324,6 @@ export type TagResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["Tag"] = ResolversParentTypes["Tag"]
 > = {
-  id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   title?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   samples?: Resolver<
     Maybe<Array<ResolversTypes["Sample"]>>,
@@ -320,19 +333,36 @@ export type TagResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 };
 
+export type TagTextResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["TagText"] = ResolversParentTypes["TagText"]
+> = {
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+};
+
+export type UserLinkResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["UserLink"] = ResolversParentTypes["UserLink"]
+> = {
+  id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+};
+
 export type SampleResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["Sample"] = ResolversParentTypes["Sample"]
 > = {
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  tags?: Resolver<
-    Maybe<Array<Maybe<ResolversTypes["Tag"]>>>,
+  tagLink?: Resolver<
+    Maybe<Array<Maybe<ResolversTypes["TagText"]>>>,
     ParentType,
     ContextType
   >;
   downloads?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
-  user?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  user?: Resolver<ResolversTypes["UserLink"], ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 };
@@ -373,6 +403,8 @@ export type Resolvers<ContextType = any> = {
   Token?: TokenResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
+  TagText?: TagTextResolvers<ContextType>;
+  UserLink?: UserLinkResolvers<ContextType>;
   Sample?: SampleResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Upload?: GraphQLScalarType;
