@@ -9,7 +9,7 @@ import { uuid } from "uuidv4";
 export const sampleResolvers: Resolvers<Context> = {
   Mutation: {
     newSample: async (_, args, ctx) => {
-      console.log("__new sample");
+      console.log("__new sample", args);
       const url = args.sample?.url;
       const userId = ctx.user?.id || "not set";
       // todo Check URL isvalid

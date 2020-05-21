@@ -65,7 +65,7 @@ const schema = gql`
     # Sign up handles firebase
     signUp(email: String!, password: String!): FirebaseUser
     updateUser(data: UpdateUser): User
-    newSample(sample: SampleInput): Sample
+    newSample(sample: SampleInput!): Sample
   }
 `;
 

@@ -110,7 +110,7 @@ export type MutationUpdateUserArgs = {
 };
 
 export type MutationNewSampleArgs = {
-  sample?: Maybe<SampleInput>;
+  sample: SampleInput;
 };
 
 export enum CacheControlScope {
@@ -387,7 +387,7 @@ export type MutationResolvers<
     Maybe<ResolversTypes["Sample"]>,
     ParentType,
     ContextType,
-    RequireFields<MutationNewSampleArgs, never>
+    RequireFields<MutationNewSampleArgs, "sample">
   >;
 };
 

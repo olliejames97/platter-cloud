@@ -1474,9 +1474,13 @@
                   "name": "sample",
                   "description": null,
                   "type": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "SampleInput",
-                    "ofType": null
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "SampleInput",
+                      "ofType": null
+                    }
                   },
                   "defaultValue": null
                 }
