@@ -14,7 +14,7 @@ export const writeTag = async (tag: DBTag): Promise<boolean> => {
   // need to get id then write
   return await tagbase()
     .doc(tag.title)
-    .set(tag)
+    .set({ ...tag, title: tag.title?.toLowerCase() })
     .then((e) => true)
     .catch((e) => {
       console.error(e);
@@ -22,8 +22,8 @@ export const writeTag = async (tag: DBTag): Promise<boolean> => {
     });
 };
 
-export const addSampleToTag = async (tagTitle: string, sampleId: string) => {
-  console.log("adding sample to tag ", tagTitle, sampleId);
+export const addSampleToTag = async (tagTitle: string, sampleTitle: string) => {
+  console.log("adding sample to tag ", tagTitle, sampleTitle);
   const existingTag = await fetchDbTag(tagTitle);
   if (existingTag) {
     const result = await updateTag(tagTitle, {
@@ -31,7 +31,7 @@ export const addSampleToTag = async (tagTitle: string, sampleId: string) => {
       sampleLinks: [
         ...existingTag.sampleLinks,
         {
-          id: sampleId,
+          id: sampleTitle,
           type: "sample",
         },
       ],
@@ -45,7 +45,7 @@ export const addSampleToTag = async (tagTitle: string, sampleId: string) => {
     title: tagTitle,
     sampleLinks: [
       {
-        id: sampleId,
+        id: sampleTitle,
         type: "sample",
       },
     ],
@@ -87,7 +87,7 @@ export const updateTag = async (
   console.log(data);
   await tagbase()
     .doc(id)
-    .update(data)
+    .update({ ...data, title: data.title?.toLowerCase() })
     .catch(() => {
       throw new ApolloError("Couldn't rewrite sample");
     });
