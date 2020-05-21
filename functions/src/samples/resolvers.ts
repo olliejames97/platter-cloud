@@ -1,12 +1,24 @@
 import { Resolvers } from "../generated/graphql";
 import { Context } from "../gqlServer";
-import { writeSample } from "./database";
+import { writeSample, getSamplesWithTags, dbSampleToSample } from "./database";
 import { ApolloError } from "apollo-server-express";
 import { getSample } from "./helpers";
 import { addSampleToTag } from "../tags/database";
 import { uuid } from "uuidv4";
 
 export const sampleResolvers: Resolvers<Context> = {
+  Query: {
+    searchSamples: async (_, args, ctx) => {
+      console.log("gettings samples with ", args.tags);
+      if (!args.tags) {
+        throw new ApolloError("No tags");
+      }
+      const dbSamples = await getSamplesWithTags(args.tags);
+      console.log(dbSamples);
+      const samples = dbSamples.map(dbSampleToSample);
+      return samples;
+    },
+  },
   Mutation: {
     newSample: async (_, args, ctx) => {
       console.log("__new sample", args);
@@ -43,6 +55,7 @@ export const sampleResolvers: Resolvers<Context> = {
         tagLinks: tags.map((t) => ({
           id: t.title,
           type: "tag",
+          title: undefined,
         })),
       });
 

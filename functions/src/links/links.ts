@@ -17,6 +17,7 @@ export interface UserLink extends BaseLink {
 
 export interface TagLink extends BaseLink {
   type: "tag";
+  title: undefined;
 }
 
 export const resolveUserLink = (link: UserLink) => getUser(link.id);

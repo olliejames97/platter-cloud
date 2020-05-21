@@ -44,10 +44,15 @@ export type Query = {
   hello?: Maybe<Scalars["String"]>;
   me?: Maybe<User>;
   getSamples?: Maybe<Scalars["Boolean"]>;
+  searchSamples?: Maybe<Array<Sample>>;
 };
 
 export type QueryGetSamplesArgs = {
   ids: Array<Scalars["String"]>;
+};
+
+export type QuerySearchSamplesArgs = {
+  tags?: Maybe<Array<Scalars["String"]>>;
 };
 
 export type Token = {
@@ -301,6 +306,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryGetSamplesArgs, "ids">
+  >;
+  searchSamples?: Resolver<
+    Maybe<Array<ResolversTypes["Sample"]>>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySearchSamplesArgs, never>
   >;
 };
 

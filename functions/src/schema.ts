@@ -22,6 +22,7 @@ const schema = gql`
     hello: String
     me: User
     getSamples(ids: [String!]!): Boolean
+    searchSamples(tags: [String!]): [Sample!]
   }
 
   type Token {

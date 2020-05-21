@@ -22,6 +22,25 @@ export const writeSample = async (
   return id;
 };
 
+export const getSamplesWithTags = async (
+  tags: Array<string>
+): Promise<Array<DBSample>> => {
+  const queryResult = await samplebase()
+    .where(
+      "tagLinks",
+      "array-contains-any",
+      tags.map((t) => ({
+        id: t,
+        type: "tag",
+      }))
+    )
+    .get();
+  const results = queryResult.docs.map((doc) => {
+    return <DBSample>doc.data();
+  });
+  return results;
+};
+
 export const fetchDbSample = async (id: string): Promise<DBSample> => {
   console.log("Getting sample with Id", id);
   const doc = await samplebase()
@@ -49,13 +68,7 @@ export const fetchDbSample = async (id: string): Promise<DBSample> => {
     console.log("no data or no doc id");
     throw new ApolloError("No doc id");
   }
-  console.log("sample: ", {
-    id,
-    name: data?.name,
-    tagLinks: data?.tagLinks,
-    userLink: data?.userLink,
-    url: data?.url,
-  });
+
   return {
     id,
     name: data?.name,
