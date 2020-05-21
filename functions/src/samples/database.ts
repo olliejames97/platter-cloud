@@ -30,7 +30,7 @@ export const getSamplesWithTags = async (
       "tagLinks",
       "array-contains-any",
       tags.map((t) => ({
-        id: t,
+        id: t.toLowerCase(),
         type: "tag",
       }))
     )
