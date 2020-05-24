@@ -11,7 +11,7 @@ export const writeSample = async (
   id: string,
   sample: Omit<DBSample, "id">
 ): Promise<string> => {
-  console.log("writing sample to DB with name ", sample.name);
+  console.log("writing sample to DB with name ", sample);
   await samplebase()
     .doc(id)
     .set(sample)

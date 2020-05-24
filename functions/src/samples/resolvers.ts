@@ -55,7 +55,7 @@ export const sampleResolvers: Resolvers<Context> = {
         tagLinks: tags.map((t) => ({
           id: t.title,
           type: "tag",
-          title: undefined,
+          title: "",
         })),
       });
 
