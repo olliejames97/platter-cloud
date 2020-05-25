@@ -28,10 +28,11 @@ export const getSamplesWithTags = async (
   const queryResult = await samplebase()
     .where(
       "tagLinks",
-      "array-contains-any",
+      "array-contains",
       tags.map((t) => ({
         id: t.toLowerCase(),
         type: "tag",
+        title: "",
       }))
     )
     .get();
