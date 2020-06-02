@@ -103,6 +103,7 @@ export type Mutation = {
   signUp?: Maybe<FirebaseUser>;
   updateUser?: Maybe<User>;
   newSample?: Maybe<Sample>;
+  ping?: Maybe<Scalars["Boolean"]>;
 };
 
 export type MutationSignUpArgs = {
@@ -400,6 +401,7 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationNewSampleArgs, "sample">
   >;
+  ping?: Resolver<Maybe<ResolversTypes["Boolean"]>, ParentType, ContextType>;
 };
 
 export interface UploadScalarConfig

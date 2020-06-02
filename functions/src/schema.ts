@@ -67,6 +67,7 @@ const schema = gql`
     signUp(email: String!, password: String!): FirebaseUser
     updateUser(data: UpdateUser): User
     newSample(sample: SampleInput!): Sample
+    ping: Boolean
   }
 `;
 

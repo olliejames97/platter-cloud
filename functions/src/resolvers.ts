@@ -13,6 +13,9 @@ const resolverFunctions: Resolvers<Context> = {
       return "hello " + JSON.stringify(me);
     },
   },
+  Mutation: {
+    ping: () => true,
+  },
 };
 
 _.merge(resolverFunctions, userResolvers, sampleResolvers);
