@@ -24,8 +24,9 @@ export const sampleResolvers: Resolvers<Context> = {
       console.log("__new sample", args);
       const url = args.sample?.url;
       const userId = ctx.user?.id || "not set";
+      const username = ctx.user?.username || "not set";
       // todo Check URL isvalid
-      if (!url || !userId) {
+      if (!url || !userId || !username) {
         throw new ApolloError("Missing fields");
       }
       const sampleId = uuid();
@@ -49,6 +50,7 @@ export const sampleResolvers: Resolvers<Context> = {
         url,
         userLink: {
           id: userId,
+          title: username,
           type: "user",
         },
         name: args.sample?.name,

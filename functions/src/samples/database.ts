@@ -105,6 +105,7 @@ export const dbSampleToSample = async (db: DBSample): Promise<Sample> => {
     id: db.id,
     user: {
       id: db.userLink.id,
+      name: db.userLink.title,
     },
     name: db.name,
     url: db.url,

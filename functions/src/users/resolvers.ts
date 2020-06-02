@@ -33,6 +33,8 @@ export const userResolvers: Resolvers<Context> = {
         await updateUser(id, {
           ...args.data,
           username: args.data?.username ?? undefined,
+        }).catch(() => {
+          throw new ApolloError("Couldnt update user");
         })
       );
     },
