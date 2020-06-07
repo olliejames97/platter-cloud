@@ -5,6 +5,7 @@ import { ApolloError } from "apollo-server-express";
 import { getSample } from "./helpers";
 import { addSampleToTag } from "../tags/database";
 import { uuid } from "uuidv4";
+import { addSampleToUser } from "../users/database";
 
 export const sampleResolvers: Resolvers<Context> = {
   Query: {
@@ -31,6 +32,8 @@ export const sampleResolvers: Resolvers<Context> = {
       }
       const sampleId = uuid();
 
+      // Get / create necassary tags
+
       const tagPromises = args.sample?.tagText?.map(async (tagTitle) => {
         console.log("__getting/creating tags tags");
         const result = await addSampleToTag(tagTitle, sampleId);
@@ -39,12 +42,14 @@ export const sampleResolvers: Resolvers<Context> = {
         }
         return result;
       });
+
       if (!tagPromises) {
         throw new ApolloError("No tags supplied");
       }
       console.log("__resolving tag promises");
       const tags = await Promise.all(tagPromises);
 
+      // Write sample to database
       console.log("__writing sample to DB");
       const newId = await writeSample(sampleId, {
         url,
@@ -60,6 +65,10 @@ export const sampleResolvers: Resolvers<Context> = {
           title: "",
         })),
       });
+
+      // write sample to user
+      console.log("adding sample to user");
+      addSampleToUser(userId, newId);
 
       console.log("__got sample ID ", newId);
       console.log("__returning getSample");

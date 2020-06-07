@@ -2,6 +2,7 @@
 import * as admin from "firebase-admin";
 import { DBUser } from "./types";
 import { ApolloError } from "apollo-server-express";
+import { SampleLink } from "../links/links";
 
 const userbase = () => {
   return admin.firestore().collection("users");
@@ -9,6 +10,22 @@ const userbase = () => {
 
 export const writeUser = async (user: DBUser) => {
   return await userbase().doc(user.id).set(user).catch(console.error);
+};
+
+export const addSampleToUser = async (userId: string, sampleId: string) => {
+  const currentUserSampleLinks = await (await fetchDbUser(userId)).sampleLinks;
+  const newLink: SampleLink = {
+    id: sampleId,
+    type: "sample",
+  };
+  const newSamples: Array<SampleLink> = currentUserSampleLinks
+    ? [...currentUserSampleLinks, newLink]
+    : [newLink];
+  return await updateUser(userId, {
+    sampleLinks: newSamples,
+  }).catch(() => {
+    throw new ApolloError("Couldn't write sample to user");
+  });
 };
 
 export const fetchDbUser = async (id: string): Promise<DBUser> => {
