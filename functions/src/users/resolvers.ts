@@ -7,6 +7,7 @@ import { updateUser, getUserWithUsername } from "./database";
 import { DBUser } from "./types";
 import * as _ from "lodash";
 import { getUserIdFirebase } from "../auth";
+import { resolveSampleLink } from "../links/links";
 export const userResolvers: Resolvers<Context> = {
   Mutation: {
     updateUser: async (_, args, ctx) => {
@@ -77,6 +78,7 @@ export const userResolvers: Resolvers<Context> = {
         id: ctx.user.id,
         hasFullAccount: !!ctx.user.username,
         username: ctx.user.username,
+        samples: ctx.user.samples,
       };
     },
   },
@@ -86,10 +88,13 @@ export const resolveDbUser = async (
   user: DBUser,
   withSamples: boolean = true
 ): Promise<User> => {
+  const samples =
+    withSamples &&
+    user.sampleLinks?.map(async (sl) => await resolveSampleLink(sl));
   return {
     id: user.id,
     username: user.username,
     hasFullAccount: user.username ? true : false,
-    // samples: withSamples ? user.sampleLinks?.map((sl) => ()) : undefined
+    samples: samples ? await Promise.all(samples) : undefined,
   };
 };

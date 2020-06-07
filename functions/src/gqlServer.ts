@@ -35,7 +35,11 @@ const gqlServer = () => {
       const restOfUser = await getUserWithToken(token).catch(() => null);
 
       // add the user to the context, check user gets through to me
-      const ctx: Context = { userToken: token, user: restOfUser };
+      const ctx: Context = {
+        userToken: token,
+        user: restOfUser ? restOfUser : null,
+      };
+
       return ctx;
     },
   });

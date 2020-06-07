@@ -35,10 +35,12 @@ export const fetchDbUser = async (id: string): Promise<DBUser> => {
     .catch(() => {
       throw new ApolloError("Couldn't get user");
     });
-  const data = doc.data();
+  const data = <DBUser>doc.data();
   if (!data || !data.id) {
     throw new ApolloError("Couldn't fetch user");
   }
+  console.log("got user from DB " + JSON.stringify(data));
+
   return {
     id: data.id,
     username: data?.username ?? undefined,

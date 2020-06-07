@@ -7,7 +7,6 @@ import { DBUser } from "./types";
 import * as _ from "lodash";
 
 export const getUserWithToken = async (token: string): Promise<User | null> => {
-  console.log("getting user with token: ", token.substr(0, 10));
   const userId = await getUserIdFirebase(token).catch(() => {
     throw new ApolloError("Couldn't get firebase ID");
   });
