@@ -3,15 +3,16 @@ import { Resolvers, User } from "../generated/graphql";
 import { Context } from "../gqlServer";
 import { ApolloError } from "apollo-server-express";
 import * as admin from "firebase-admin";
-import { updateUser } from "./database";
+import { updateUser, getUserWithUsername } from "./database";
 import { DBUser } from "./types";
 import * as _ from "lodash";
 import { getUserIdFirebase } from "../auth";
 export const userResolvers: Resolvers<Context> = {
   Mutation: {
     updateUser: async (_, args, ctx) => {
-      console.log("update user " + JSON.stringify(args.data));
-
+      if (!args.data || !args.data.username) {
+        throw new ApolloError("No data");
+      }
       if (!ctx.userToken && !ctx.user?.id) {
         throw new ApolloError(
           "Tried to update user, but no user present in context"
@@ -28,7 +29,10 @@ export const userResolvers: Resolvers<Context> = {
       if (!id) {
         throw new ApolloError("Couldn't get a user id for update");
       }
-
+      const existingUser = await getUserWithUsername(args.data.username);
+      if (existingUser) {
+        throw new ApolloError("User already exists");
+      }
       return resolveDbUser(
         await updateUser(id, {
           ...args.data,

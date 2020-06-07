@@ -45,3 +45,14 @@ export const updateUser = async (
     });
   return await fetchDbUser(id);
 };
+
+export const getUserWithUsername = async (
+  name: string
+): Promise<DBUser | null> => {
+  console.log("looking for user with username " + name);
+  const queryResult = await userbase().where("username", "==", name).get();
+  const results = queryResult.docs.map((doc) => {
+    return <DBUser>doc.data();
+  });
+  return results[0];
+};
