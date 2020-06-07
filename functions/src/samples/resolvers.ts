@@ -15,7 +15,6 @@ export const sampleResolvers: Resolvers<Context> = {
         throw new ApolloError("No tags");
       }
       const dbSamples = await getSamplesWithTags(args.tags);
-      console.log(dbSamples);
       const samples = dbSamples.map(dbSampleToSample);
       return samples;
     },
@@ -33,7 +32,6 @@ export const sampleResolvers: Resolvers<Context> = {
       const sampleId = uuid();
 
       // Get / create necassary tags
-
       const tagPromises = args.sample?.tagText?.map(async (tagTitle) => {
         console.log("__getting/creating tags tags");
         const result = await addSampleToTag(tagTitle, sampleId);

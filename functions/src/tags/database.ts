@@ -23,7 +23,6 @@ export const writeTag = async (tag: DBTag): Promise<boolean> => {
 };
 
 export const addSampleToTag = async (tagTitle: string, sampleTitle: string) => {
-  console.log("adding sample to tag ", tagTitle, sampleTitle);
   const existingTag = await fetchDbTag(tagTitle);
   if (existingTag) {
     const result = await updateTag(tagTitle, {
