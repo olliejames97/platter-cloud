@@ -24,7 +24,6 @@ export type User = {
   __typename?: "User";
   id: Scalars["String"];
   username?: Maybe<Scalars["String"]>;
-  hasFullAccount: Scalars["Boolean"];
   samples?: Maybe<Array<Sample>>;
 };
 
@@ -278,7 +277,6 @@ export type UserResolvers<
 > = {
   id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  hasFullAccount?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>;
   samples?: Resolver<
     Maybe<Array<ResolversTypes["Sample"]>>,
     ParentType,

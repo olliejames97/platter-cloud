@@ -76,7 +76,6 @@ export const userResolvers: Resolvers<Context> = {
       }
       return {
         id: ctx.user.id,
-        hasFullAccount: !!ctx.user.username,
         username: ctx.user.username,
         samples: ctx.user.samples,
       };
@@ -94,7 +93,6 @@ export const resolveDbUser = async (
   return {
     id: user.id,
     username: user.username,
-    hasFullAccount: user.username ? true : false,
     samples: samples ? await Promise.all(samples) : undefined,
   };
 };

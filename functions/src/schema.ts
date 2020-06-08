@@ -4,7 +4,6 @@ const schema = gql`
   type User {
     id: String!
     username: String
-    hasFullAccount: Boolean!
     samples: [Sample!]
   }
 
@@ -21,6 +20,7 @@ const schema = gql`
   type Query {
     hello: String
     me: User
+    getUser(id: string): User!
     getSamples(ids: [String!]!): Boolean
     searchSamples(tags: [String!]): [Sample!]
   }
