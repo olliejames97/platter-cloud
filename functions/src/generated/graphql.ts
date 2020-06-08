@@ -42,8 +42,13 @@ export type Query = {
   __typename?: "Query";
   hello?: Maybe<Scalars["String"]>;
   me?: Maybe<User>;
+  getUser: User;
   getSamples?: Maybe<Scalars["Boolean"]>;
   searchSamples?: Maybe<Array<Sample>>;
+};
+
+export type QueryGetUserArgs = {
+  id?: Maybe<Scalars["String"]>;
 };
 
 export type QueryGetSamplesArgs = {
@@ -300,6 +305,12 @@ export type QueryResolvers<
 > = {
   hello?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   me?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  getUser?: Resolver<
+    ResolversTypes["User"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetUserArgs, never>
+  >;
   getSamples?: Resolver<
     Maybe<ResolversTypes["Boolean"]>,
     ParentType,

@@ -3,7 +3,7 @@ import { Resolvers, User } from "../generated/graphql";
 import { Context } from "../gqlServer";
 import { ApolloError } from "apollo-server-express";
 import * as admin from "firebase-admin";
-import { updateUser, getUserWithUsername } from "./database";
+import { updateUser, getUserWithUsername, fetchDbUser } from "./database";
 import { DBUser } from "./types";
 import * as _ from "lodash";
 import { getUserIdFirebase } from "../auth";
@@ -79,6 +79,13 @@ export const userResolvers: Resolvers<Context> = {
         username: ctx.user.username,
         samples: ctx.user.samples,
       };
+    },
+    getUser: async (_, args, ctx) => {
+      if (!args.id) {
+        throw new ApolloError("No ID provided");
+      }
+      const user = await fetchDbUser(args.id);
+      return resolveDbUser(user);
     },
   },
 };

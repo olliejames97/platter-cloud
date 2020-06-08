@@ -20,7 +20,7 @@ const schema = gql`
   type Query {
     hello: String
     me: User
-    getUser(id: string): User!
+    getUser(id: String): User!
     getSamples(ids: [String!]!): Boolean
     searchSamples(tags: [String!]): [Sample!]
   }
