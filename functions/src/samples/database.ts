@@ -13,7 +13,7 @@ export const writeSample = async (
 ): Promise<string> => {
   await samplebase()
     .doc(id)
-    .set(sample)
+    .set({ id, ...sample })
     .catch(() => {
       throw new ApolloError("Error writing sample to DB");
     });
