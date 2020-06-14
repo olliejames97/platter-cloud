@@ -17,14 +17,6 @@ const schema = gql`
     email: String
   }
 
-  type Query {
-    hello: String
-    me: User
-    getUser(id: String): User!
-    getSamples(ids: [String!]!): Boolean
-    searchSamples(tags: [String!]): [Sample!]
-  }
-
   type Token {
     token: String
   }
@@ -68,6 +60,15 @@ const schema = gql`
     updateUser(data: UpdateUser): User
     newSample(sample: SampleInput!): Sample
     ping: Boolean
+  }
+
+  type Query {
+    hello: String
+    me: User
+    getUser(id: String): User!
+    getSamples(ids: [String!]!): Boolean
+    searchSamples(tags: [String!]): [Sample!]
+    getHomeSamples: [Sample!]
   }
 `;
 

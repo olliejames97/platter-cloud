@@ -6,6 +6,7 @@ import { getSample } from "./helpers";
 import { addSampleToTag } from "../tags/database";
 import { uuid } from "uuidv4";
 import { addSampleToUser } from "../users/database";
+import moment = require("moment");
 
 export const sampleResolvers: Resolvers<Context> = {
   Query: {
@@ -62,6 +63,8 @@ export const sampleResolvers: Resolvers<Context> = {
           type: "tag",
           title: "",
         })),
+        downloads: 0,
+        createdAt: moment().toDate(),
       });
 
       // write sample to user

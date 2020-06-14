@@ -41,6 +41,10 @@ export const getSamplesWithTags = async (
   return results;
 };
 
+export const getLatestSamples = async () => {
+  // const queryResult = await samplebase().where("");
+};
+
 export const fetchDbSample = async (id: string): Promise<DBSample> => {
   console.log("Getting sample with Id", id);
   const doc = await samplebase()
@@ -75,6 +79,8 @@ export const fetchDbSample = async (id: string): Promise<DBSample> => {
     tagLinks: data?.tagLinks,
     userLink: data?.userLink,
     url: data?.url,
+    createdAt: data?.createdAt,
+    downloads: data?.downloads,
   };
 };
 

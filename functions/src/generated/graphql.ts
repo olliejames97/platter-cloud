@@ -3,7 +3,6 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from "graphql";
-
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = {
   [X in Exclude<keyof T, K>]?: T[X];
@@ -36,27 +35,6 @@ export type FirebaseUser = {
   __typename?: "FirebaseUser";
   id: Scalars["String"];
   email?: Maybe<Scalars["String"]>;
-};
-
-export type Query = {
-  __typename?: "Query";
-  hello?: Maybe<Scalars["String"]>;
-  me?: Maybe<User>;
-  getUser: User;
-  getSamples?: Maybe<Scalars["Boolean"]>;
-  searchSamples?: Maybe<Array<Sample>>;
-};
-
-export type QueryGetUserArgs = {
-  id?: Maybe<Scalars["String"]>;
-};
-
-export type QueryGetSamplesArgs = {
-  ids: Array<Scalars["String"]>;
-};
-
-export type QuerySearchSamplesArgs = {
-  tags?: Maybe<Array<Scalars["String"]>>;
 };
 
 export type Token = {
@@ -121,6 +99,28 @@ export type MutationUpdateUserArgs = {
 
 export type MutationNewSampleArgs = {
   sample: SampleInput;
+};
+
+export type Query = {
+  __typename?: "Query";
+  hello?: Maybe<Scalars["String"]>;
+  me?: Maybe<User>;
+  getUser: User;
+  getSamples?: Maybe<Scalars["Boolean"]>;
+  searchSamples?: Maybe<Array<Sample>>;
+  getHomeSamples?: Maybe<Array<Sample>>;
+};
+
+export type QueryGetUserArgs = {
+  id?: Maybe<Scalars["String"]>;
+};
+
+export type QueryGetSamplesArgs = {
+  ids: Array<Scalars["String"]>;
+};
+
+export type QuerySearchSamplesArgs = {
+  tags?: Maybe<Array<Scalars["String"]>>;
 };
 
 export enum CacheControlScope {
@@ -241,7 +241,6 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   UpdateUser: UpdateUser;
   FirebaseUser: ResolverTypeWrapper<FirebaseUser>;
-  Query: ResolverTypeWrapper<{}>;
   Token: ResolverTypeWrapper<Token>;
   File: ResolverTypeWrapper<File>;
   Tag: ResolverTypeWrapper<Tag>;
@@ -251,6 +250,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars["Int"]>;
   SampleInput: SampleInput;
   Mutation: ResolverTypeWrapper<{}>;
+  Query: ResolverTypeWrapper<{}>;
   CacheControlScope: CacheControlScope;
   Upload: ResolverTypeWrapper<Scalars["Upload"]>;
 };
@@ -262,7 +262,6 @@ export type ResolversParentTypes = {
   User: User;
   UpdateUser: UpdateUser;
   FirebaseUser: FirebaseUser;
-  Query: {};
   Token: Token;
   File: File;
   Tag: Tag;
@@ -272,6 +271,7 @@ export type ResolversParentTypes = {
   Int: Scalars["Int"];
   SampleInput: SampleInput;
   Mutation: {};
+  Query: {};
   CacheControlScope: CacheControlScope;
   Upload: Scalars["Upload"];
 };
@@ -297,32 +297,6 @@ export type FirebaseUserResolvers<
   id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
-};
-
-export type QueryResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
-> = {
-  hello?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  me?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
-  getUser?: Resolver<
-    ResolversTypes["User"],
-    ParentType,
-    ContextType,
-    RequireFields<QueryGetUserArgs, never>
-  >;
-  getSamples?: Resolver<
-    Maybe<ResolversTypes["Boolean"]>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryGetSamplesArgs, "ids">
-  >;
-  searchSamples?: Resolver<
-    Maybe<Array<ResolversTypes["Sample"]>>,
-    ParentType,
-    ContextType,
-    RequireFields<QuerySearchSamplesArgs, never>
-  >;
 };
 
 export type TokenResolvers<
@@ -413,6 +387,37 @@ export type MutationResolvers<
   ping?: Resolver<Maybe<ResolversTypes["Boolean"]>, ParentType, ContextType>;
 };
 
+export type QueryResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
+> = {
+  hello?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  me?: Resolver<Maybe<ResolversTypes["User"]>, ParentType, ContextType>;
+  getUser?: Resolver<
+    ResolversTypes["User"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetUserArgs, never>
+  >;
+  getSamples?: Resolver<
+    Maybe<ResolversTypes["Boolean"]>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetSamplesArgs, "ids">
+  >;
+  searchSamples?: Resolver<
+    Maybe<Array<ResolversTypes["Sample"]>>,
+    ParentType,
+    ContextType,
+    RequireFields<QuerySearchSamplesArgs, never>
+  >;
+  getHomeSamples?: Resolver<
+    Maybe<Array<ResolversTypes["Sample"]>>,
+    ParentType,
+    ContextType
+  >;
+};
+
 export interface UploadScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["Upload"], any> {
   name: "Upload";
@@ -421,7 +426,6 @@ export interface UploadScalarConfig
 export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
   FirebaseUser?: FirebaseUserResolvers<ContextType>;
-  Query?: QueryResolvers<ContextType>;
   Token?: TokenResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
   Tag?: TagResolvers<ContextType>;
@@ -429,6 +433,7 @@ export type Resolvers<ContextType = any> = {
   UserLink?: UserLinkResolvers<ContextType>;
   Sample?: SampleResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
   Upload?: GraphQLScalarType;
 };
 

@@ -6,4 +6,6 @@ export type DBSample = {
   tagLinks: Array<TagLink>;
   userLink: UserLink;
   url: string;
+  createdAt: Date;
+  downloads: number;
 };
