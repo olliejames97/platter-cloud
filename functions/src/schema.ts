@@ -54,6 +54,11 @@ const schema = gql`
     name: String!
   }
 
+  type HomePage {
+    text: String!
+    samples: [Sample!]
+  }
+
   type Mutation {
     # Sign up handles firebase
     signUp(email: String!, password: String!): FirebaseUser
@@ -68,7 +73,7 @@ const schema = gql`
     getUser(id: String): User!
     getSamples(ids: [String!]!): Boolean
     searchSamples(tags: [String!]): [Sample!]
-    getHomeSamples: [Sample!]
+    home: HomePage
   }
 `;
 

@@ -42,7 +42,14 @@ export const getSamplesWithTags = async (
 };
 
 export const getLatestSamples = async () => {
-  // const queryResult = await samplebase().where("");
+  const queryResult = await samplebase()
+    .orderBy("createdAt", "desc")
+    .limit(10)
+    .get();
+  const results = queryResult.docs.map((doc) => {
+    return <DBSample>doc.data();
+  });
+  return results;
 };
 
 export const fetchDbSample = async (id: string): Promise<DBSample> => {

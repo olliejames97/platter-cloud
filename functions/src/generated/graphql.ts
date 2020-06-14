@@ -3,6 +3,7 @@ import {
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from "graphql";
+
 export type Maybe<T> = T | null;
 export type RequireFields<T, K extends keyof T> = {
   [X in Exclude<keyof T, K>]?: T[X];
@@ -80,6 +81,12 @@ export type SampleInput = {
   name: Scalars["String"];
 };
 
+export type HomePage = {
+  __typename?: "HomePage";
+  text: Scalars["String"];
+  samples?: Maybe<Array<Sample>>;
+};
+
 export type Mutation = {
   __typename?: "Mutation";
   signUp?: Maybe<FirebaseUser>;
@@ -108,7 +115,7 @@ export type Query = {
   getUser: User;
   getSamples?: Maybe<Scalars["Boolean"]>;
   searchSamples?: Maybe<Array<Sample>>;
-  getHomeSamples?: Maybe<Array<Sample>>;
+  home?: Maybe<HomePage>;
 };
 
 export type QueryGetUserArgs = {
@@ -249,6 +256,7 @@ export type ResolversTypes = {
   Sample: ResolverTypeWrapper<Sample>;
   Int: ResolverTypeWrapper<Scalars["Int"]>;
   SampleInput: SampleInput;
+  HomePage: ResolverTypeWrapper<HomePage>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   CacheControlScope: CacheControlScope;
@@ -270,6 +278,7 @@ export type ResolversParentTypes = {
   Sample: Sample;
   Int: Scalars["Int"];
   SampleInput: SampleInput;
+  HomePage: HomePage;
   Mutation: {};
   Query: {};
   CacheControlScope: CacheControlScope;
@@ -362,6 +371,19 @@ export type SampleResolvers<
   __isTypeOf?: isTypeOfResolverFn<ParentType>;
 };
 
+export type HomePageResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["HomePage"] = ResolversParentTypes["HomePage"]
+> = {
+  text?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  samples?: Resolver<
+    Maybe<Array<ResolversTypes["Sample"]>>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: isTypeOfResolverFn<ParentType>;
+};
+
 export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
@@ -411,11 +433,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QuerySearchSamplesArgs, never>
   >;
-  getHomeSamples?: Resolver<
-    Maybe<Array<ResolversTypes["Sample"]>>,
-    ParentType,
-    ContextType
-  >;
+  home?: Resolver<Maybe<ResolversTypes["HomePage"]>, ParentType, ContextType>;
 };
 
 export interface UploadScalarConfig
@@ -432,6 +450,7 @@ export type Resolvers<ContextType = any> = {
   TagText?: TagTextResolvers<ContextType>;
   UserLink?: UserLinkResolvers<ContextType>;
   Sample?: SampleResolvers<ContextType>;
+  HomePage?: HomePageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Upload?: GraphQLScalarType;

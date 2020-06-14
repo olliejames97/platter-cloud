@@ -1,6 +1,11 @@
 import { Resolvers } from "../generated/graphql";
 import { Context } from "../gqlServer";
-import { writeSample, getSamplesWithTags, dbSampleToSample } from "./database";
+import {
+  writeSample,
+  getSamplesWithTags,
+  dbSampleToSample,
+  getLatestSamples,
+} from "./database";
 import { ApolloError } from "apollo-server-express";
 import { getSample } from "./helpers";
 import { addSampleToTag } from "../tags/database";
@@ -18,6 +23,14 @@ export const sampleResolvers: Resolvers<Context> = {
       const dbSamples = await getSamplesWithTags(args.tags);
       const samples = dbSamples.map(dbSampleToSample);
       return samples;
+    },
+    home: async (_, __, ___) => {
+      const dbSamples = await getLatestSamples();
+      const samples = await Promise.all(dbSamples.map(dbSampleToSample));
+      return {
+        text: "Welcome to Platter",
+        samples,
+      };
     },
   },
   Mutation: {
