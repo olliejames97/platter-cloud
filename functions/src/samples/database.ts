@@ -122,6 +122,7 @@ export const dbSampleToSample = async (db: DBSample): Promise<Sample> => {
     },
     name: db.name,
     url: db.url,
+    filetype: db.filetype,
     tagLink: db.tagLinks.map(
       (tl): TagText => ({
         name: tl.id,

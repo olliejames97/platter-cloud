@@ -37,7 +37,7 @@ export const sampleResolvers: Resolvers<Context> = {
   Mutation: {
     newSample: async (_, args, ctx) => {
       if (!["mp3", "wav", "aif"].includes(args.sample.fileType)) {
-        throw new ApolloError("Invalid filetype");
+        throw new ApolloError("Invalid filetype:", args.sample.fileType);
       }
       console.log("__new sample", args);
       const filetype = args.sample.fileType as ValidFileTypes;
