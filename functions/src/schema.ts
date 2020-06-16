@@ -46,12 +46,14 @@ const schema = gql`
     downloads: Int!
     user: UserLink!
     url: String
+    filetype: String!
   }
 
   input SampleInput {
     tagText: [String!]
     url: String!
     name: String!
+    fileType: String!
   }
 
   type HomePage {

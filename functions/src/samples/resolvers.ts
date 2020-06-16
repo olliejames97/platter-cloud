@@ -12,6 +12,7 @@ import { addSampleToTag } from "../tags/database";
 import { uuid } from "uuidv4";
 import { addSampleToUser } from "../users/database";
 import moment = require("moment");
+import { ValidFileTypes } from "./types";
 
 export const sampleResolvers: Resolvers<Context> = {
   Query: {
@@ -35,7 +36,11 @@ export const sampleResolvers: Resolvers<Context> = {
   },
   Mutation: {
     newSample: async (_, args, ctx) => {
+      if (!["mp3", "wav", "aif"].includes(args.sample.fileType)) {
+        throw new ApolloError("Invalid filetype");
+      }
       console.log("__new sample", args);
+      const filetype = args.sample.fileType as ValidFileTypes;
       const url = args.sample?.url;
       const userId = ctx.user?.id || "not set";
       const username = ctx.user?.username || "not set";
@@ -78,6 +83,7 @@ export const sampleResolvers: Resolvers<Context> = {
         })),
         downloads: 0,
         createdAt: moment().toDate(),
+        filetype: filetype,
       });
 
       // write sample to user

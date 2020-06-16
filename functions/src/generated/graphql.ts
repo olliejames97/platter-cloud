@@ -79,6 +79,7 @@ export type SampleInput = {
   tagText?: Maybe<Array<Scalars["String"]>>;
   url: Scalars["String"];
   name: Scalars["String"];
+  fileType: Scalars["String"];
 };
 
 export type HomePage = {

@@ -88,6 +88,7 @@ export const fetchDbSample = async (id: string): Promise<DBSample> => {
     url: data?.url,
     createdAt: data?.createdAt,
     downloads: data?.downloads,
+    filetype: data?.filetype,
   };
 };
 
